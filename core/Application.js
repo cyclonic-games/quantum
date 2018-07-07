@@ -1,6 +1,7 @@
-const Event = require('./core/Event');
+const Event = require('./Event');
 
 const Settings = require('../modules/Settings');
+const TaskManager = require('../modules/TaskManager');
 
 class Application extends Event.Emitter {
 
@@ -35,7 +36,8 @@ class Application extends Event.Emitter {
 }
 
 Application.modules = {
-    settings: Settings
+    settings: Settings,
+    tasks: TaskManager
 };
 
 module.exports = Application;
