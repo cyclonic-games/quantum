@@ -5,19 +5,20 @@ const TaskManager = require('../modules/TaskManager');
 
 class Application extends Event.Emitter {
 
-    constructor (name, extensions = [ ]) {
+    constructor (title, plugins = [ ]) {
         super();
 
+        this.title = title;
         this.plugins = plugins;
 
         for (const module of Object.keys(Application.modules)) {
-            this[ module ] = new Application.modules[ module ](module, this);
+            this[ module ] = new Application.modules[ module ](this);
         }
 
         const exclude = [ 'plugins' ];
         const modules = Object.keys(this).filter(key => !exclude.includes(key));
 
-        for (const mod of modules.map(mod => this[ mod ])) {
+        for (const mod of modules.map(mod => this[ mod ])) if (mod.connect) {
             mod.connect(this);
         }
 
@@ -31,7 +32,7 @@ class Application extends Event.Emitter {
     }
 
     start () {
-        this.emit('run', [ ]);
+        this.emit('start', [ ]);
     }
 }
 

@@ -1,4 +1,5 @@
 const subscriptions = new WeakMap();
+const subscriptionsSymbol = Symbol('subscriptions');
 
 class Event {
 
@@ -16,7 +17,7 @@ class Event {
 
 Event.Emitter = class EventEmitter {
 
-    get [ Event.Emitter.subscriptions ] () {
+    get [ subscriptionsSymbol ] () {
         return subscriptions.get(this);
     }
 
@@ -28,7 +29,9 @@ Event.Emitter = class EventEmitter {
         const when = new Date();
         const event = new Event(type, when, details, this);
 
-        subscriptions.get(this).get(type).forEach(observable => observable.pipe(event));
+        if (subscriptions.get(this).has(type)) {
+            subscriptions.get(this).get(type).forEach(observable => observable.pipe(event));
+        }
 
         return event;
     }
@@ -53,7 +56,7 @@ Event.Emitter = class EventEmitter {
     }
 }
 
-Event.Emitter.subscriptions = Symbol('subscriptions');
+Event.Emitter.subscriptions = subscriptionsSymbol;
 
 Event.Observable = class EventObservable {
 

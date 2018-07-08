@@ -18,7 +18,7 @@ const Module = new Proxy(Event.Emitter, {
             get (module, property, proxy) {
                 const subscriptions = Reflect.get(Event.Emitter, Event.Emitter.subscriptions);
 
-                if (subscriptions.has(property)) {
+                if (subscriptions && subscriptions.has(property)) {
 
                     if (modules.has(module) && modules.get(module).has(property)) {
                         return modules.get(module).get(property);
