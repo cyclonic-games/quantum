@@ -11,7 +11,7 @@ class Application extends Event.Emitter {
         this.title = title;
         this.plugins = plugins;
 
-        for (const module of Object.keys(Application.modules)) {
+        for (const module of Object.keys(this.constructor.modules)) {
             this[ module ] = new Application.modules[ module ](this);
         }
 
